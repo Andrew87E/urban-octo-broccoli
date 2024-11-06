@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Contact Us</h1>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="capital.html">Capital City</a></li>
+        <li><a href="city1.html">City 1</a></li>
+        <li><a href="city2.html">City 2</a></li>
+      </ul>
+    </nav>
+    <section>
+      <h2>Get in Touch</h2>
+      <form id="contactForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" /><br />
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" /><br />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" /><br />
+
+        <label for="confirmEmail">Confirm Email:</label>
+        <input type="email" id="confirmEmail" name="confirmEmail" /><br />
+
+        <label for="question">Your Question:</label><br />
+        <textarea id="question" name="question"></textarea><br />
+
+        <button type="button" onclick="validateEmails()">Submit</button>
+      </form>
+    </section>
+    <footer>
+      <p>&copy; 2024 [State Name] Government Office</p>
+    </footer>
+  </body>
+</html>
