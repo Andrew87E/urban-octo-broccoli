@@ -1,14 +1,14 @@
-# This file is a template, and might need editing before it works on your project.
-# Full project: https://gitlab.com/pages/plain-html
-
-image: busybox
+image: ruby:3.2
 
 pages:
-  stage: deploy
-  script:
-    - echo "The site will be deployed to $CI_PAGES_URL"
+  script: |
+    if test -f "index.html"; then
+      gem install jekyll
+      jekyll build -d public
+    else
+      echo "No index.html file found, this file is required."
+      exit
+    fi
   artifacts:
     paths:
       - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
