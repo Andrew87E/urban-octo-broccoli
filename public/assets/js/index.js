@@ -13,18 +13,7 @@ const getLocatoinData = async () => {
     `https://api.findip.net/${ip}/?token=85047163909943138b5593dc41e0512c`
   );
   const data = await response.json();
-  // console.log({
-  //   country: data.country.names.en,
-  //   state: {
-  //     name: data.subdivisions[0].names.en,
-  //     code: data.subdivisions[0].iso_code,
-  //   },
-  //   city: data.city.names.en,
-  //   location: {
-  //     latitude: data.location.latitude,
-  //     longitude: data.location.longitude,
-  //   },
-  // });
+
   return {
     country: { name: data.country.names.en, code: data.country.iso_code },
     state: {
@@ -44,7 +33,13 @@ const getCapitalCity = async (stateCode, countryCode) => {
   const response = await fetch(
     `http://api.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
   );
-  const data = await response.json();
+  let data = await response.json();
+  if (data.geonames.length === 0) {
+    const response = await fetch(
+      `http://api.geonames.org/searchJSON?country=${countryCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
+    );
+    data = await response.json();
+  }
   return data.geonames[0]?.toponymName;
 };
 
@@ -53,7 +48,13 @@ const getTop10Cities = async (stateCode, countryCode) => {
   const response = await fetch(
     `http://api.geonames.org/searchJSON?country=${countryCode}&featureClass=P&adminCode1=${stateCode}&orderby=population&maxRows=10&username=${GEONAMES_USERNAME}`
   );
-  const data = await response.json();
+  let data = await response.json();
+  if (data.geonames.length === 0) {
+    const response = await fetch(
+      `http://api.geonames.org/searchJSON?country=${countryCode}&featureClass=P&orderby=population&maxRows=10&username=${GEONAMES_USERNAME}`
+    );
+    data = await response.json();
+  }
   return data.geonames;
 };
 
@@ -78,15 +79,14 @@ const getStateIntro = async (state) => {
 };
 
 // Fetch population for a specific city using GeoNames API
-// const getCityPopulation = async (cityName, countryCode) => {
-//   const response = await fetch(
-//     `http://api.geonames.org/searchJSON?q=${cityName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
-//   );
-//   const data = await response.json();
-//   return data.geonames[0]?.population || "Population data not available";
-// };
+const getStatePopulation = async (stateName, countryCode) => {
+  const response = await fetch(
+    `http://api.geonames.org/searchJSON?q=${stateName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
+  );
+  const data = await response.json();
+  return data.geonames[0]?.population || "Population data not available";
+};
 
-// Update state, city, and interesting facts
 // Update state, city, and interesting facts
 const updateContent = async () => {
   const initialData = await getLocatoinData();
@@ -96,16 +96,42 @@ const updateContent = async () => {
   );
 
   console.log(initialData, citiesData);
+  localStorage.setItem("initialData", JSON.stringify(initialData));
 
-  const city1Name = initialData.city;
-  const city2 = citiesData.top10.find((city) => city.name !== initialData.city);
+  const { capital, top10 } = citiesData;
+  const currentCity = initialData.city;
+
+  // Filter out the capital and the user's current city to avoid duplicates
+  const filteredCities = top10.filter(
+    (city) => city.name !== capital && city.name !== currentCity
+  );
+
+  // Set city1 to the capital if the user is not in the capital; otherwise, take the first city from filteredCities
+  const city1 = currentCity === capital ? filteredCities[0] : { name: capital };
+
+  // Set city2 to the first city in filteredCities that's not equal to city1
+  const city2 = filteredCities.find((city) => city.name !== city1.name);
+  localStorage.setItem("citiesData", JSON.stringify({ city1, city2, capital }));
+
+  console.log({
+    city1: city1.name,
+    city2: city2.name,
+    capitalCity: capital,
+  });
 
   updateState(initialData.state.name);
-  updateCities(city1Name, city2.name, citiesData.capital);
+  updateCities(city1.name, city2.name, capital);
 
-  const stateIntro = await getStateIntro(initialData.state.name); // Await state intro text
+  const stateIntro = await getStateIntro(initialData.state.name);
   updateStateIntro(stateIntro.intro);
   updatePhoto(stateIntro.photo);
+
+  getStatePopulation(initialData.state.name, initialData.country.code).then(
+    (population) => {
+      const city1PopulationEl = document.getElementById("population-count");
+      city1PopulationEl.textContent = population.toLocaleString();
+    }
+  );
 };
 
 const updatePhoto = async (photo) => {
@@ -120,9 +146,15 @@ const updateStateIntro = async (stateIntro) => {
 };
 
 const updateState = (state) => {
-  // find all occurrences of the word "[State Name]" in the document
-  const stateElement = document.getElementById("state-name");
-  stateElement.textContent = state;
+  const stateElements = document.querySelectorAll(".state-name");
+  if (stateElements.length === 0) {
+    console.error("No elements with class 'state-name' found.");
+    return;
+  }
+
+  stateElements.forEach((element) => {
+    element.textContent = state;
+  });
   console.log("State updated");
 };
 

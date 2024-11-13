@@ -7,12 +7,43 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="loading" style="display: none">Loading...</div>
+    <!-- Improved Loading Indicator -->
+    <div
+      id="loading"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+      "
+    >
+      <div
+        style="
+          width: 50px;
+          height: 50px;
+          border: 5px solid #ddd;
+          border-top: 5px solid #3498db;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        "
+      ></div>
+      <p style="margin-top: 10px; color: #3498db; font-size: 1.2em">
+        Loading...
+      </p>
+    </div>
+
     <div id="error" style="display: none">
       An error occurred. Please try again later.
     </div>
     <header>
-      <h1>Welcome to <span id="state-name"></span></h1>
+      <h1>Welcome to <span class="state-name"></span></h1>
     </header>
     <nav>
       <ul>
@@ -28,11 +59,26 @@
     </section>
     <aside>
       <h3>Did you know?</h3>
-      <p>Interesting fact about the state.</p>
+      <p>
+        The Population of <span class="state-name"></span> is:
+        <span id="population-count"></span>
+      </p>
     </aside>
     <footer>
-      <p>&copy; 2024 [State Name] Government Office</p>
+      <p>&copy; 2024 <span class="state-name"></span> Government Office</p>
     </footer>
+
+    <style>
+      /* Spinner animation */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </body>
-  <script src="script.js"></script>
+  <script src="./assets/js/index.js"></script>
 </html>
