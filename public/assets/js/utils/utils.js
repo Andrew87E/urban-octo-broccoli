@@ -78,41 +78,38 @@ export const fetchCitiesData = async (stateCode, countryCode) => {
   };
 };
 
-// Fetch the introduction of a given state using Wikipedia API
+// Fetch introduction and image from Wikipedia API response
 export const getIntroFromWiki = async (state, city, isCity) => {
-  if (isCity) {
-    const response = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${city}`
-    );
+  const searchQuery = isCity ? `${city}, ${state}` : state;
+  const url = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&format=json&exintro=&titles=${encodeURIComponent(
+    searchQuery
+  )}&origin=*&pithumbsize=500`;
+
+  try {
+    const response = await fetch(url);
     const data = await response.json();
-    console.log(data.extract);
+    const pages = data.query.pages;
+    const pageId = Object.keys(pages)[0];
+    const pageData = pages[pageId];
 
-    if (data.extract.includes("refers to:")) {
-      const response = await fetch(
-        `https://en.wikipedia.org/api/rest_v1/page/summary/${city},${state}`
-      );
-      const data = await response.json();
-      console.log("first refers hit", data.extract);
+    // Use the extract as the intro
+    const intro = pageData.extract;
 
-      if (data.extract.includes("refers to:")) {
-        console.error("No data available");
-        return {
-          intro:
-            "We can't find any information about this city! Tell us more about it! :)",
-          photo:
-            "https://media.istockphoto.com/id/483724081/photo/yosemite-valley-landscape-and-river-california.jpg?s=2048x2048&w=is&k=20&c=j0OSpP2sAz582wDP0t28BzmwSMb0BJ2li7koJ2yROcA=",
-        };
-      }
-      return { intro: data.extract, photo: data.originalimage.source };
+    // Derive the full image source from the thumbnail URL, if available
+    let photo = null;
+    if (pageData.thumbnail.source) {
+      imgSrc = pageData.thumbnail.source;
+      // const lastSlash = imgSrc.lastIndexOf("/");
+      photo = imgSrc;
     }
-    return { intro: data.extract, photo: data.originalimage.source };
-  } else {
-    const response = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${state}`
-    );
-    const data = await response.json();
-    console.log(data.extract); // Log for debugging
-    return { intro: data.extract, photo: data.originalimage.source };
+
+    return { intro, photo };
+  } catch (error) {
+    console.error("Error fetching data from Wikipedia:", error);
+    return {
+      intro: "An error occurred while fetching information.",
+      photo: null,
+    };
   }
 };
 

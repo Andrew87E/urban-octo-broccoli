@@ -8,7 +8,6 @@ export const updateStateEl = (state) => {
   stateElements.forEach((element) => {
     element.textContent = state;
   });
-  console.log("State updated");
 };
 
 export const updateCitiesEl = (city1, city2, capital) => {
