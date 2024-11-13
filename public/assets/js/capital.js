@@ -52,7 +52,7 @@ const getCapitalIntro = async (capital, state) => {
 // Fetch population for a specific city using GeoNames API
 const getCityPopulation = async (cityName, countryCode) => {
   const response = await fetch(
-    `http://api.geonames.org/searchJSON?q=${cityName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
+    `https://secure.geonames.org/searchJSON?q=${cityName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
   );
   const data = await response.json();
   console.log(JSON.stringify(data));

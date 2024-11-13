@@ -23,35 +23,27 @@ const getLocationData = () => {
   }
 };
 
-const getCityIntro = async (city, state) => {
-  const response = await fetch(
-    `https://en.wikipedia.org/api/rest_v1/page/summary/${city}`
-  );
-  const data = await response.json();
-  console.log(data.extract); // Log for debugging
-  if (data.extract.includes("refers to:")) {
-    const response = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${city},${state}`
-    );
-    const data = await response.json();
-    console.log(data.extract); // Log for debugging
-    if (data.extract.includes("refers to:")) {
-      return {
-        intro: "No data available",
-        photo:
-          "https://media.istockphoto.com/id/483724081/photo/yosemite-valley-landscape-and-river-california.jpg?s=2048x2048&w=is&k=20&c=j0OSpP2sAz582wDP0t28BzmwSMb0BJ2li7koJ2yROcA=",
-      };
-    }
-    return { intro: data.extract, photo: data.originalimage.source };
-  }
-  return { intro: data.extract, photo: data.originalimage.source };
-};
-
 // Fetch population for a specific city using GeoNames API
 const getCityPopulation = async (cityName, countryCode) => {
+  const body = JSON.stringify({
+    countryCode: countryCode,
+    stateCode: cityName,
+    featureCode: "PPLA",
+    maxRows: 1,
+  });
+  console.log(body);
+
   const response = await fetch(
-    `http://api.geonames.org/searchJSON?q=${cityName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
+    `https://secure.geonames.org/searchJSON?q=${cityName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    }
   );
+
   const data = await response.json();
   console.log(JSON.stringify(data));
   return data.geonames[0]?.population || "Population data not available";
@@ -110,7 +102,7 @@ const updateState = (state) => {
 const updateCities = (city1, city2, capital) => {
   const city1Element = document.querySelectorAll(".city-1");
   const city2Element = document.getElementById("city-2");
-  const capitalEls = document.querySelectorAll(".capital-name");
+  const capitalEls = document.querySelectorAll(".capital-city");
 
   city1Element.forEach((element) => {
     element.textContent = city1;
