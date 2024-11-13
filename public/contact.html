@@ -13,14 +13,14 @@
     </header>
     <nav>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="capital.html">Capital City</a></li>
-        <li><a href="city1.html">City 1</a></li>
-        <li><a href="city2.html">City 2</a></li>
+        <li><a class="state-name" href="index.html"></a></li>
+        <li><a id="capital-city" href="capital.html"></a></li>
+        <li><a id="city-1" href="city1.html"></a></li>
+        <li><a id="city-2" href="city2.html"></a></li>
       </ul>
     </nav>
     <section>
-      <h2>Get in Touch</h2>
+      <h2>Get in Touch with <span class="state-name"></span></h2>
       <form id="contactForm">
         <label for="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" /><br />
@@ -41,7 +41,9 @@
       </form>
     </section>
     <footer>
-      <p>&copy; 2024 [State Name] Government Office</p>
+      <p>&copy; 2024 <span class="state-name"></span> Government Office</p>
     </footer>
   </body>
+  <script src="script.js"></script>
+  <script src="/public/assets/js/index.js"></script>
 </html>
