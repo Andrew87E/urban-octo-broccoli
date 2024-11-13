@@ -3,37 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>City 1 of [State Name]</title>
+    <title>Welcome to our page</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
-      <h1>City 1: [City Name]</h1>
+      <h1>City 1: <span class="city-1"></span></h1>
     </header>
     <nav>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="capital.html">Capital City</a></li>
-        <li><a href="city2.html">City 2</a></li>
+        <li><a class="state-name" href="index.html">Home</a></li>
+        <li><a class="capital-name" href="capital.html"></a></li>
+        <li><a id="city-2" href="city2.html"></a></li>
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
     </nav>
     <section>
-      <h2>About [City 1]</h2>
-      <ul>
-        <li>Population: [Population]</li>
-        <li>Incorporation Year: [Year]</li>
-        <li>Region: [Region]</li>
-        <li>Classification: [Urban/Suburban/Rural]</li>
-        <li>Average Income Level: [Income Level]</li>
-      </ul>
-      <img src="./static/city1.jpg" alt="City 1" />
+      <h2>About <span class="city-1"></span></h2>
+      <p id="city-intro"></p>
+      <img id="city-pic" alt="City 1" />
     </section>
     <aside>
-      <p>Other facts about City 1.</p>
+      <h3>Did you know?</h3>
+      <p>
+        The Population of <span class="city-1"></span> is:
+        <span id="population-count"></span>
+      </p>
     </aside>
     <footer>
       <p>&copy; 2024 [State Name] Government Office</p>
     </footer>
   </body>
+  <script src="/public/assets/js/city1.js"></script>
 </html>
