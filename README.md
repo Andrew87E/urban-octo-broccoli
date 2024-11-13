@@ -6,7 +6,7 @@ this page will gather your current location data and use it to choose the state 
 
 # Images
 
-Images are free-use images from unsplash.com
+Images are free-use images from wikipedia.com
 
 Revision: 1.0
 
