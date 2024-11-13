@@ -85,16 +85,20 @@ export const getIntroFromWiki = async (state, city, isCity) => {
       `https://en.wikipedia.org/api/rest_v1/page/summary/${city}`
     );
     const data = await response.json();
-    console.log(data.extract); // Log for debugging
+    console.log(data.extract);
+
     if (data.extract.includes("refers to:")) {
       const response = await fetch(
         `https://en.wikipedia.org/api/rest_v1/page/summary/${city},${state}`
       );
       const data = await response.json();
-      console.log(data.extract); // Log for debugging
+      console.log("first refers hit", data.extract);
+
       if (data.extract.includes("refers to:")) {
+        console.error("No data available");
         return {
-          intro: "No data available",
+          intro:
+            "We can't find any information about this city! Tell us more about it! :)",
           photo:
             "https://media.istockphoto.com/id/483724081/photo/yosemite-valley-landscape-and-river-california.jpg?s=2048x2048&w=is&k=20&c=j0OSpP2sAz582wDP0t28BzmwSMb0BJ2li7koJ2yROcA=",
         };
@@ -121,3 +125,8 @@ export const getPopulationData = async (locationName, countryCode) => {
   return data.geonames[0]?.population || "Population data not available";
 };
 
+export const getDataFromStorage = () => {
+  const initialData = JSON.parse(localStorage.getItem("initialData"));
+  const citiesData = JSON.parse(localStorage.getItem("citiesData"));
+  return { initialData, citiesData };
+};

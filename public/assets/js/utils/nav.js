@@ -21,7 +21,7 @@ export const updateCitiesEl = (city1, city2, capital) => {
       element.textContent = city1;
     });
   } else {
-    console.error("No elements with class 'city-1' found.");
+    console.error("No elements with class 'city-1' found. Skipping...");
   }
 
   if (city2Element.length > 0) {
@@ -29,7 +29,7 @@ export const updateCitiesEl = (city1, city2, capital) => {
       element.textContent = city2;
     });
   } else {
-    console.error("No elements with class 'city-2' found.");
+    console.error("No elements with class 'city-2' found. Skipping...");
   }
 
   if (capitalElement.length > 0) {
@@ -37,6 +37,6 @@ export const updateCitiesEl = (city1, city2, capital) => {
       element.textContent = capital;
     });
   } else {
-    console.error("No elements with class 'capital-city' found.");
+    console.error("No elements with class 'capital-city' found. Skipping...");
   }
 };
