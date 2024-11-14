@@ -19,7 +19,7 @@ const updateContent = async () => {
     initialData.country.code
   );
 
-  console.log(initialData, citiesData);
+  // console.log(initialData, citiesData);
   localStorage.setItem("initialData", JSON.stringify(initialData));
 
   const { capital, top10 } = citiesData;
@@ -49,12 +49,12 @@ const updateContent = async () => {
   localStorage.setItem("citiesData", JSON.stringify({ capital, city1, city2 }));
 
   // Log final result for debugging
-  console.log({ capitalCity: capital, city1: city1.name, city2: city2.name });
-  console.log({
-    city1: city1.name,
-    city2: city2.name,
-    capitalCity: capital,
-  });
+  // console.log({ capitalCity: capital, city1: city1.name, city2: city2.name });
+  // console.log({
+  // city1: city1.name,
+  // city2: city2.name,
+  // capitalCity: capital,
+  // });
 
   updateStateEl(initialData.state.name);
   updateCitiesEl(city1.name, city2.name, capital);

@@ -1,12 +1,14 @@
 export const updateIntro = async (intro) => {
-  const introEl = document.getElementById("intro");
-  introEl.innerHTML = intro;
+  $("#intro").html(intro);
 };
 
 export const updatePhoto = async (photo) => {
-  console.log(photo);
-  // $(".pic").attr("src", photo);
-  const picEl = $(".pic");
-  picEl.attr("src", photo);
-  console.log(picEl.attr("src"));
+  $(".pic").attr("src", photo);
+};
+
+export const updatePopulation = async (population) => {
+  $("#population-count").text(population);
+  if (population.includes("Population data not available")) {
+    $("#population-count").addClass("text-danger");
+  }
 };

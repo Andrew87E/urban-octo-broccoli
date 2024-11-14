@@ -8,5 +8,5 @@ export {
   getPopulationData,
   getDataFromStorage,
 } from "./utils.js";
-export { updateIntro, updatePhoto } from "./updates.js";
+export { updateIntro, updatePhoto, updatePopulation } from "./updates.js";
 export { updateStateEl, updateCitiesEl } from "./nav.js";

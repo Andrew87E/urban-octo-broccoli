@@ -101,9 +101,14 @@ export const getIntroFromWiki = async (state, city, isCity) => {
     // Derive the full image source from the thumbnail URL, if available
     let photo = null;
     if (pageData.thumbnail.source) {
-      console.log(pageData.thumbnail.source);
+      // console.log(pageData.thumbnail.source);
       photo = pageData.thumbnail.source;
     }
+
+    // console.log({
+    //   intro: html,
+    //   photo,
+    // });
 
     return { intro: html, photo };
   } catch (error) {
@@ -134,7 +139,10 @@ export const getPopulationData = async (locationName, countryCode) => {
     `https://secure.geonames.org/searchJSON?q=${locationName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
   );
   const data = await response.json();
-  return data.geonames[0]?.population || "Population data not available";
+  return (
+    data.geonames[0]?.population ||
+    "Population data not available. Please use our form to update this information! Thank you!"
+  );
 };
 
 export const getDataFromStorage = () => {

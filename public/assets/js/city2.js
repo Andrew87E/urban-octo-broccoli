@@ -22,7 +22,7 @@ const getLocationData = () => {
 };
 
 const getCityIntro = async (city, state) => {
-  console.log(city, state);
+  // console.log(city, state);
   const response = await fetch(
     `https://en.wikipedia.org/api/rest_v1/page/summary/${city}`
   );
@@ -52,7 +52,7 @@ const getCityPopulation = async (cityName, countryCode) => {
     `https://secure.geonames.org/searchJSON?q=${cityName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
   );
   const data = await response.json();
-  //   console.log(JSON.stringify(data));
+  //   // console.log(JSON.stringify(data));
   return data.geonames[0]?.population || "Population data not available";
 };
 

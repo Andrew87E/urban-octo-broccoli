@@ -25,7 +25,7 @@ const updateContent = async () => {
     localStorage.setItem("citiesData", JSON.stringify(citiesData));
   }
 
-  console.log(initialData.city, citiesData);
+  // console.log(initialData.city, citiesData);
 
   const city1 = citiesData.city1;
   const city2 = citiesData.city2;

@@ -157,3 +157,15 @@ form button:hover {
     margin: 10px auto;
   }
 }
+
+.text-danger {
+  color: red;
+  font-weight: bold !important;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.text-success {
+  color: green;
+  font-weight: bold !important;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}

@@ -10,6 +10,7 @@ import {
   updatePhoto,
   updateStateEl,
   updateCitiesEl,
+  updatePopulation,
 } from "./utils/index.js";
 
 // Update state, city, and interesting facts
@@ -37,11 +38,11 @@ const updateContent = async () => {
     citiesData.city1.name,
     true
   );
+  // console.log(cityIntro.intro);
   updateIntro(cityIntro.intro);
   updatePhoto(cityIntro.photo);
-  getPopulationData(capital, initialData.country.code).then((population) => {
-    const city1PopulationEl = document.getElementById("population-count");
-    city1PopulationEl.textContent = population.toLocaleString();
+  getPopulationData(city1, initialData.country.code).then((population) => {
+    updatePopulation(population);
   });
 };
 
