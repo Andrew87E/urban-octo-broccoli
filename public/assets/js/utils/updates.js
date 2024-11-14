@@ -1,10 +1,12 @@
 export const updateIntro = async (intro) => {
   const introEl = document.getElementById("intro");
-  introEl.textContent = intro;
+  introEl.innerHTML = intro;
 };
 
 export const updatePhoto = async (photo) => {
-  const photoEl = document.getElementById("pic");
-  photo = photo.replace(/ /g, "_");
-  photoEl.src = photo;
+  console.log(photo);
+  // $(".pic").attr("src", photo);
+  const picEl = $(".pic");
+  picEl.attr("src", photo);
+  console.log(picEl.attr("src"));
 };

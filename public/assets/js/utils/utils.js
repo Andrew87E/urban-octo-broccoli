@@ -94,16 +94,18 @@ export const getIntroFromWiki = async (state, city, isCity) => {
 
     // Use the extract as the intro
     const intro = pageData.extract;
+    // turn our string back into html
+    const html = cleanHTML(intro);
+    // set the intro to the cleaned html
 
     // Derive the full image source from the thumbnail URL, if available
     let photo = null;
     if (pageData.thumbnail.source) {
-      imgSrc = pageData.thumbnail.source;
-      // const lastSlash = imgSrc.lastIndexOf("/");
-      photo = imgSrc;
+      console.log(pageData.thumbnail.source);
+      photo = pageData.thumbnail.source;
     }
 
-    return { intro, photo };
+    return { intro: html, photo };
   } catch (error) {
     console.error("Error fetching data from Wikipedia:", error);
     return {
@@ -111,6 +113,19 @@ export const getIntroFromWiki = async (state, city, isCity) => {
       photo: null,
     };
   }
+};
+
+// Helper function to clean unwanted HTML tags
+const cleanHTML = (htmlString) => {
+  // Parse the HTML string into a document
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, "text/html");
+
+  // Remove unwanted tags (e.g., <link>, <style>)
+  doc.querySelectorAll("link, style, script").forEach((el) => el.remove());
+
+  // Return the cleaned HTML as a string
+  return doc.body.innerHTML;
 };
 
 // Fetch population for a specific city using GeoNames API
