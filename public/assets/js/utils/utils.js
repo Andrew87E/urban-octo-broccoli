@@ -84,7 +84,7 @@ const insertFooter = async (state) => {
   const footer = `
     <p>&copy; ${currentYear} ${state} Government Office</p>
     <p id="subtext">Powered by <a href="https://www.geonames.org/" target="_blank">GeoNames</a> and <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a></p>
-    <p id="small-subtext">Made with <a href="https://www.edwards.codes/" target="_blank">&#10084;</a> by <a href="https://www.github.com/andrew87e" target="_blank" style="color: #42f566;">Andrew Edwards</a></p>
+    <p id="small-subtext">Made with <a href="https://www.edwards.codes/" target="_blank" style="color: #e81324;">&#10084;</a> by <a href="https://www.github.com/andrew87e" target="_blank" style="color: #42f566;">Andrew Edwards</a></p>
   `;
   $("#footer").html(footer);
 };
