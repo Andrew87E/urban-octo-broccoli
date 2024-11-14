@@ -3,37 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Capital City of [State Name]</title>
+    <title>Welcome to our page</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css"
+    />
   </head>
   <body>
+    <div id="loading">
+      <div
+        style="
+          width: 50px;
+          height: 50px;
+          border: 5px solid #ddd;
+          border-top: 5px solid #3498db;
+          border-radius: 50%;
+          margin: auto;
+          animation: spin 1s linear infinite;
+        "
+      ></div>
+      <p style="margin-top: 10px; color: #3498db; font-size: 1.2em">
+        Loading...
+      </p>
+    </div>
+
+    <div id="error" style="display: none">
+      An error occurred. Please try again later.
+    </div>
     <header>
-      <h1>Capital City: [City Name]</h1>
+      <h1>Capital City: <span class="capital-city"></span></h1>
     </header>
     <nav>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="city1.html">City 1</a></li>
-        <li><a href="city2.html">City 2</a></li>
+        <li><a class="state-name" href="/"></a></li>
+        <li><a class="city-1" href="city1.html"></a></li>
+        <li><a class="city-2" href="city2.html"></a></li>
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
     </nav>
-    <section>
-      <h2>About [Capital City]</h2>
-      <ul>
-        <li>Population: [Population]</li>
-        <li>Incorporation Year: [Year]</li>
-        <li>Region: [Region]</li>
-        <li>Classification: [Urban/Suburban/Rural]</li>
-        <li>Average Income Level: [Income Level]</li>
-      </ul>
-      <img src="./static/capital.jpg" alt="Capital City" />
+    <section id="section-container">
+      <h2>About <span class="capital-city"></span></h2>
+      <p id="intro"></p>
+      <img class="pic" alt="Capital City" />
     </section>
-    <aside>
-      <p>Other facts about the capital city.</p>
+    <aside id="aside-container">
+      <h3>Did you know?</h3>
+      <p>
+        The Population of <span class="capital-city"></span> is:
+        <span id="population-count"></span>
+      </p>
     </aside>
-    <footer>
-      <p>&copy; 2024 [State Name] Government Office</p>
-    </footer>
+    <footer id="footer"></footer>
+    <style>
+      /* Spinner animation */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </body>
+
+  <script type="module" src="./assets/js/capital.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
+    crossorigin="anonymous"
+  ></script>
 </html>

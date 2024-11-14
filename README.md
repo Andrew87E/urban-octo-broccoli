@@ -1,6 +1,14 @@
+# Dynamic Content
+
+this page will gather your current location data and use it to choose the state and cities.
+
+### Try connecting from a far away place with a VPN to see the difference in the data!
+
 # Images
 
-Images are free-use images from unsplash.com
+Images are free-use images from wikipedia.com
+
+Revision: 1.0
 
 <strong> **DO NOT DISTRIBUTE OR PUBLICLY POST SOLUTIONS TO THESE LABS. MAKE ALL FORKS OF THIS REPOSITORY WITH SOLUTION CODE PRIVATE. PLEASE REFER TO THE STUDENT CODE OF CONDUCT AND ETHICAL EXPECTATIONS FOR COLLEGE OF INFORMATION TECHNOLOGY STUDENTS FOR SPECIFICS. ** </strong>
 

@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Us</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css"
+    />
+
     <script src="script.js"></script>
   </head>
   <body>
@@ -13,14 +18,14 @@
     </header>
     <nav>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="capital.html">Capital City</a></li>
-        <li><a href="city1.html">City 1</a></li>
-        <li><a href="city2.html">City 2</a></li>
+        <li><a class="state-name" href="index.html"></a></li>
+        <li><a class="capital-city" href="capital.html"></a></li>
+        <li><a class="city-1" href="city1.html"></a></li>
+        <li><a class="city-2" href="city2.html"></a></li>
       </ul>
     </nav>
-    <section>
-      <h2>Get in Touch</h2>
+    <section id="section-container">
+      <h2>Get in Touch with <span class="state-name"></span></h2>
       <form id="contactForm">
         <label for="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" /><br />
@@ -40,8 +45,24 @@
         <button type="button" onclick="validateEmails()">Submit</button>
       </form>
     </section>
-    <footer>
-      <p>&copy; 2024 [State Name] Government Office</p>
-    </footer>
+    <footer id="footer"></footer>
+    <style>
+      /* Spinner animation */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </body>
+  <script src="script.js"></script>
+  <script type="module" src="./assets/js/contact.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
+    crossorigin="anonymous"
+  ></script>
 </html>
