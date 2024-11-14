@@ -15,6 +15,7 @@ import {
 
 // Update state, city, and interesting facts
 const updateContent = async () => {
+  console.log("updateContent");
   let { initialData, citiesData } = getDataFromStorage();
   if (!initialData || !citiesData) {
     initialData = await getLocationData();
@@ -33,19 +34,6 @@ const updateContent = async () => {
   // Nav update
   updateStateEl(initialData.state.name);
   updateCitiesEl(city1.name, city2.name, capital);
-
-  const cityIntro = await getIntroFromWiki(
-    initialData.state.name,
-    citiesData.city2.name,
-    true
-  );
-
-  updateIntro(cityIntro.intro);
-  updatePhoto(cityIntro.photo);
-
-  getPopulationData(city2.name, initialData.country.code).then((population) => {
-    updatePopulation(population.toLocaleString());
-  });
 };
 
 // Run content update

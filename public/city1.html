@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome to our page</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css"
+    />
   </head>
   <body>
     <div
@@ -52,21 +56,19 @@
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
     </nav>
-    <section>
+    <section id="section-container">
       <h2>About <span class="city-1"></span></h2>
       <p id="intro"></p>
       <img class="pic" alt="City 1" />
     </section>
-    <aside>
+    <aside id="aside-container">
       <h3>Did you know?</h3>
       <p>
         The Population of <span class="city-1"></span> is:
         <span id="population-count"></span>
       </p>
     </aside>
-    <footer>
-      <p>&copy; 2024 <span class="state-name"></span> Government Office</p>
-    </footer>
+    <footer id="footer"></footer>
     <style>
       /* Spinner animation */
       @keyframes spin {

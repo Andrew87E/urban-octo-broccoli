@@ -10,9 +10,12 @@ import {
   updatePhoto,
   updateStateEl,
   updateCitiesEl,
+  updatePopulation,
 } from "./utils/index.js";
 
-// Update state, city, and interesting facts
+/**
+ * This is our main function that updates the state, city, and interesting facts on the page.
+ */
 const updateContent = async () => {
   let { initialData, citiesData } = getDataFromStorage();
   if (!initialData || !citiesData) {
@@ -42,8 +45,7 @@ const updateContent = async () => {
   updateIntro(capitalIntro.intro);
   updatePhoto(capitalIntro.photo);
   getPopulationData(capital, initialData.country.code).then((population) => {
-    const city1PopulationEl = document.getElementById("population-count");
-    city1PopulationEl.textContent = population.toLocaleString();
+    updatePopulation(population.toLocaleString());
   });
 };
 

@@ -30,6 +30,7 @@ const updateContent = async () => {
   const city2 = citiesData.city2;
   const capital = citiesData.capital;
 
+  // Nav update
   updateStateEl(initialData.state.name);
   updateCitiesEl(city1.name, city2.name, capital);
 
@@ -41,8 +42,9 @@ const updateContent = async () => {
   // console.log(cityIntro.intro);
   updateIntro(cityIntro.intro);
   updatePhoto(cityIntro.photo);
-  getPopulationData(city1, initialData.country.code).then((population) => {
-    updatePopulation(population);
+
+  getPopulationData(city1.name, initialData.country.code).then((population) => {
+    updatePopulation(population.toLocaleString());
   });
 };
 

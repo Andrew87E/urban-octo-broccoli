@@ -78,12 +78,24 @@ export const fetchCitiesData = async (stateCode, countryCode) => {
   };
 };
 
+const insertFooter = async (state) => {
+  // text--code for heart in html  &#10084;
+  const currentYear = new Date().getFullYear();
+  const footer = `
+    <p>&copy; ${currentYear} ${state} Government Office</p>
+    <p id="subtext">Powered by <a href="https://www.geonames.org/" target="_blank">GeoNames</a> and <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a></p>
+    <p id="small-subtext">Made with <a href="https://www.edwards.codes/" target="_blank">&#10084;</a> by <a href="https://www.github.com/andrew87e" target="_blank" style="color: #42f566;">Andrew Edwards</a></p>
+  `;
+  $("#footer").html(footer);
+};
+
 // Fetch introduction and image from Wikipedia API response
 export const getIntroFromWiki = async (state, city, isCity) => {
+  insertFooter(state);
   const searchQuery = isCity ? `${city}, ${state}` : state;
   const url = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&format=json&exintro=&titles=${encodeURIComponent(
     searchQuery
-  )}&origin=*&pithumbsize=500`;
+  )}&origin=*&pithumbsize=1000`;
 
   try {
     const response = await fetch(url);
@@ -93,7 +105,27 @@ export const getIntroFromWiki = async (state, city, isCity) => {
     const pageData = pages[pageId];
 
     // Use the extract as the intro
-    const intro = pageData.extract;
+    let intro = pageData.extract;
+
+    if (!intro) {
+      // if city, state doesnt work lets try just the city.
+      const newUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&format=json&titles=${encodeURIComponent(
+        city
+      )}&origin=*&pithumbsize=1000`;
+
+      const newResponse = await fetch(newUrl);
+      const newData = await newResponse.json();
+      const newPages = newData.query.pages;
+      const newPageId = Object.keys(newPages)[0];
+      const newPageData = newPages[newPageId];
+      intro = newPageData.extract;
+
+      if (!intro) {
+        intro = "No information found.";
+      }
+
+      return { intro, photo: newPageData.thumbnail.source ?? null };
+    }
     // turn our string back into html
     const html = cleanHTML(intro);
     // set the intro to the cleaned html
