@@ -130,15 +130,16 @@ export const getIntroFromWiki = async (state, city, isCity) => {
   const url = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&format=json&exintro=&titles=${encodeURIComponent(
     searchQuery
   )}&origin=*&pithumbsize=1000`;
+  console.log(city, state, isCity, searchQuery);
 
   try {
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
 
-    const pages = data.query.pages;
-    const pageId = Object.keys(pages)[0];
-    const pageData = pages[pageId];
+    let pages = data.query.pages;
+    let pageId = Object.keys(pages)[0];
+    let pageData = pages[pageId];
 
     // Use the extract as the intro
     let intro = pageData.extract;
@@ -151,16 +152,15 @@ export const getIntroFromWiki = async (state, city, isCity) => {
 
       const newResponse = await fetch(newUrl);
       const newData = await newResponse.json();
-      const newPages = newData.query.pages;
-      const newPageId = Object.keys(newPages)[0];
-      const newPageData = newPages[newPageId];
-      intro = newPageData.extract;
+      pages = newData.query.pages;
+      pageId = Object.keys(pages)[0];
+      pageData = pages[pageId];
+      intro = pageData.extract;
 
       if (!intro) {
         intro = "No information found.";
       }
 
-      return { intro, photo: newPageData.thumbnail.source ?? null };
     }
     // turn our string back into html
     const html = cleanHTML(intro);
@@ -177,6 +177,11 @@ export const getIntroFromWiki = async (state, city, isCity) => {
       intro: html,
       photo,
     });
+
+    localStorage.setItem(
+      isCity ? city : state,
+      JSON.stringify({ intro: html, photo })
+    );
 
     return { intro: html, photo };
   } catch (error) {
@@ -219,6 +224,7 @@ export const getPopulationData = async (locationName, countryCode) => {
 };
 
 export const getDataFromStorage = () => {
+  updateLoadingText("Getting data from cold storage...");
   const initialData = JSON.parse(localStorage.getItem("initialData"));
   const citiesData = JSON.parse(localStorage.getItem("citiesData"));
   return { initialData, citiesData };

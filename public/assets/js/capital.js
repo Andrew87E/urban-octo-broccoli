@@ -35,11 +35,14 @@ const updateContent = async () => {
   updateStateEl(initialData.state.name);
   updateCitiesEl(city1.name, city2.name, capital);
 
-  const capitalIntro = await getIntroFromWiki(
-    initialData.state.name,
-    citiesData.capital,
-    true
-  );
+  let capitalIntro = localStorage.getItem(capital);
+  if (!capitalIntro) {
+    capitalIntro = await getIntroFromWiki(initialData.state.name, capital);
+    localStorage.setItem(capital, JSON.stringify(capitalIntro));
+  } else {
+    capitalIntro = JSON.parse(capitalIntro);
+  }
+
   updateIntro(capitalIntro.intro);
   updatePhoto(capitalIntro.photo);
   getPopulationData(capital, initialData.country.code).then((population) => {

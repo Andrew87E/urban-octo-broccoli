@@ -32,11 +32,14 @@ const updateContent = async () => {
   updateStateEl(initialData.state.name);
   updateCitiesEl(city1.name, city2.name, capital);
 
-  const cityIntro = await getIntroFromWiki(
-    initialData.state.name,
-    citiesData.city1.name,
-    true
-  );
+  let cityIntro = localStorage.getItem(city1.name);
+  if (!cityIntro) {
+    cityIntro = await getIntroFromWiki(initialData.state.name, city1.name);
+    localStorage.setItem(city1.name, JSON.stringify(cityIntro));
+  } else {
+    cityIntro = JSON.parse(cityIntro);
+  }
+
   // console.log(cityIntro.intro);
   updateIntro(cityIntro.intro);
   updatePhoto(cityIntro.photo);

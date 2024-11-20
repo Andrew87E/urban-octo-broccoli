@@ -27,15 +27,19 @@ const updateContent = async () => {
     localStorage.setItem("citiesData", JSON.stringify(citiesData));
   }
 
-  // console.log(initialData, citiesData);
-  localStorage.setItem("initialData", JSON.stringify(initialData));
-
   const { capital, city1, city2 } = citiesData;
 
   updateStateEl(initialData.state.name);
   updateCitiesEl(city1.name, city2.name, capital);
 
-  const stateIntro = await getIntroFromWiki(initialData.state.name);
+  // Fetch the intro and photo for the state from localStorage or the API if not available
+  let stateIntro = localStorage.getItem(initialData.state.name);
+  if (!stateIntro) {
+    stateIntro = await getIntroFromWiki(initialData.state.name);
+    localStorage.setItem(initialData.state.name, JSON.stringify(stateIntro));
+  } else {
+    stateIntro = JSON.parse(stateIntro);
+  }
 
   updateIntro(stateIntro.intro);
   updatePhoto(stateIntro.photo);
