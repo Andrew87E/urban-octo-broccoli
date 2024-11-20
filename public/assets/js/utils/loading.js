@@ -1,11 +1,14 @@
 // Display loading animation
 export const displayLoading = () => {
-  const loading = document.getElementById("loading");
-  if (loading) loading.style.display = "block";
+  $("#loading").css("display", "block");
 };
 
 // Hide loading animation
 export const hideLoading = () => {
-  const loading = document.getElementById("loading");
-  if (loading) loading.style.display = "none";
+  $("#loading-text").text("Loading");
+  $("#loading").css("display", "none");
+};
+
+export const updateLoadingText = (text) => {
+  $("#loading-text").text(text);
 };

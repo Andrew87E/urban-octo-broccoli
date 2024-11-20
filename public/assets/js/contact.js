@@ -27,9 +27,7 @@ const updateContent = async () => {
     localStorage.setItem("citiesData", JSON.stringify(citiesData));
   }
 
-  const city1 = citiesData.city1;
-  const city2 = citiesData.city2;
-  const capital = citiesData.capital;
+  const { capital, city1, city2 } = citiesData;
 
   // Nav update
   updateStateEl(initialData.state.name);

@@ -1,18 +1,23 @@
 const GEONAMES_USERNAME = "secret8squirrel";
-let ip;
+let ipAdd;
 let locationData;
+
+import { updateLoadingText } from "./loading.js";
 
 // Fetch user's public IP address
 const getIp = async () => {
-  if (ip) return ip;
-  const response = await fetch("https://api.ipify.org?format=json");
+  updateLoadingText("Fetching IP address...");
+  if (ipAdd) return ipAdd;
+  const response = await fetch("https://www.andrewedwards.dev/api/test/feip");
   const data = await response.json();
-  ip = data.ip;
-  return data.ip;
+  console.log(data);
+  ipAdd = data.ipAdd;
+  return ipAdd;
 };
 
 // get the city and state of the user using the IP address
 export const getLocationData = async () => {
+  updateLoadingText("Fetching location data...");
   if (locationData) return locationData;
 
   const ip = await getIp();
@@ -39,6 +44,7 @@ export const getLocationData = async () => {
 
 // Fetch the capital city of a given state using GeoNames API
 const getCapitalCity = async (stateCode, countryCode) => {
+  updateLoadingText("Fetching capital city for your state...");
   const response = await fetch(
     `https://secure.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
   );
@@ -54,6 +60,7 @@ const getCapitalCity = async (stateCode, countryCode) => {
 
 // Fetch the top most populated city of a given state using GeoNames API
 const getTop10Cities = async (stateCode, countryCode) => {
+  updateLoadingText("Fetching the coolest cities for your state...");
   const response = await fetch(
     `https://secure.geonames.org/searchJSON?country=${countryCode}&featureClass=P&adminCode1=${stateCode}&orderby=population&maxRows=10&username=${GEONAMES_USERNAME}`
   );
@@ -68,17 +75,43 @@ const getTop10Cities = async (stateCode, countryCode) => {
 };
 
 // fetch city data
-export const fetchCitiesData = async (stateCode, countryCode) => {
-  const capitalCity = await getCapitalCity(stateCode, countryCode);
+export const fetchCitiesData = async (stateCode, countryCode, currentCity) => {
+  updateLoadingText("Fetching city data for your state...");
+  const capital = await getCapitalCity(stateCode, countryCode);
   const top10 = await getTop10Cities(stateCode, countryCode);
 
+  // Filter out any duplicates: the capital and the user's current city
+  const filteredCities = top10.filter(
+    (city) => city.name !== capital && city.name !== currentCity
+  );
+
+  // Set city1 based on whether the current city is the capital
+  let city1;
+  if (currentCity === capital) {
+    // If the user is in the capital, use the first city from the filtered list
+    city1 = filteredCities[0];
+  } else {
+    // If the user is not in the capital, set city1 to the capital
+    city1 = { name: currentCity };
+  }
+
+  // Select city2 as the next distinct city from filteredCities that isn't city1
+  const city2 = filteredCities.find((city) => city.name !== city1.name) || {
+    name: "Another city not available",
+  }; // Fallback if list is too short
+
+  // Store distinct cities in localStorage for later use
+  localStorage.setItem("citiesData", JSON.stringify({ capital, city1, city2 }));
+
   return {
-    capital: capitalCity,
-    top10: top10,
+    capital,
+    city1,
+    city2,
   };
 };
 
 const insertFooter = async (state) => {
+  // updateLoadingText("Putting socks on...");
   // text--code for heart in html  &#10084;
   const currentYear = new Date().getFullYear();
   const footer = `
@@ -91,6 +124,7 @@ const insertFooter = async (state) => {
 
 // Fetch introduction and image from Wikipedia API response
 export const getIntroFromWiki = async (state, city, isCity) => {
+  updateLoadingText("Fetching interesting facts...");
   insertFooter(state);
   const searchQuery = isCity ? `${city}, ${state}` : state;
   const url = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&format=json&exintro=&titles=${encodeURIComponent(
@@ -100,6 +134,8 @@ export const getIntroFromWiki = async (state, city, isCity) => {
   try {
     const response = await fetch(url);
     const data = await response.json();
+    console.log(data);
+
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
     const pageData = pages[pageId];
@@ -137,23 +173,27 @@ export const getIntroFromWiki = async (state, city, isCity) => {
       photo = pageData.thumbnail.source;
     }
 
-    // console.log({
-    //   intro: html,
-    //   photo,
-    // });
+    console.log({
+      intro: html,
+      photo,
+    });
 
     return { intro: html, photo };
   } catch (error) {
     console.error("Error fetching data from Wikipedia:", error);
     return {
-      intro: "An error occurred while fetching information.",
-      photo: null,
+      intro: `
+        <strong>We Couldn't find any info on this city! Please use our form to let us know! Thank you!</strong>
+        <br><br>Laborum et elit ut elit eiusmod ipsum ad tempor exercitation sint. Exercitation mollit pariatur elit elit esse occaecat nisi ut culpa aute ipsum tempor mollit. Incididunt occaecat aliqua adipisicing culpa id et tempor eu velit. Aliquip officia ad ipsum duis et eu fugiat in incididunt esse tempor ipsum. In sint sunt commodo deserunt sit in qui cillum duis in mollit officia. Consequat eu anim in mollit reprehenderit esse sit dolor id reprehenderit. Lorem do aliqua id minim consectetur consectetur ea in non sunt proident nulla pariatur ex.`,
+      photo:
+        "https://images.unsplash.com/photo-1731331323996-7ff41939ddf3?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     };
   }
 };
 
 // Helper function to clean unwanted HTML tags
 const cleanHTML = (htmlString) => {
+  updateLoadingText("Cleaning up the text...");
   // Parse the HTML string into a document
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, "text/html");
@@ -167,6 +207,7 @@ const cleanHTML = (htmlString) => {
 
 // Fetch population for a specific city using GeoNames API
 export const getPopulationData = async (locationName, countryCode) => {
+  updateLoadingText("Fetching population data...");
   const response = await fetch(
     `https://secure.geonames.org/searchJSON?q=${locationName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
   );

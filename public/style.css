@@ -137,7 +137,7 @@ form button {
   cursor: pointer;
   margin-top: 15px;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  transition: background-color 1s;
 }
 
 form button:hover {
@@ -263,4 +263,14 @@ form button:hover {
   padding-top: 40vh;
   z-index: 9999;
   transition: all 2s;
+}
+
+.btn-loading {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
 }

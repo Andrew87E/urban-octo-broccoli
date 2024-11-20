@@ -1,6 +1,6 @@
 // single barrel pattern for easier imports
 
-export { displayLoading, hideLoading } from "./loading.js";
+export { displayLoading, hideLoading, updateLoadingText } from "./loading.js";
 export {
   getLocationData,
   fetchCitiesData,
