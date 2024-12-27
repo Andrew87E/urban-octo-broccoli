@@ -24,29 +24,35 @@
         <li><a class="city-2" href="city2.html"></a></li>
       </ul>
     </nav>
-    <section id="section-container">
-      <h2>Get in Touch with <span class="state-name"></span></h2>
-      <form id="contactForm">
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" /><br />
+    <div class="contact-container">
+      <section id="section-container">
+        <h2>Get in Touch with <span class="state-name"></span></h2>
+        <form id="contactForm">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName" /><br />
 
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" /><br />
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName" /><br />
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" /><br />
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" /><br />
 
-        <label for="confirmEmail">Confirm Email:</label>
-        <input type="email" id="confirmEmail" name="confirmEmail" /><br />
+          <label for="confirmEmail">Confirm Email:</label>
+          <input type="email" id="confirmEmail" name="confirmEmail" /><br />
 
-        <label for="question">Your Question:</label><br />
-        <textarea id="question" name="question"></textarea><br />
+          <label for="question">Your Question:</label><br />
+          <textarea id="question" name="question"></textarea><br />
 
-        <button type="button" onclick="validateEmails()" id="submit">
-          Submit
-        </button>
-      </form>
-    </section>
+          <button type="button" onclick="validateEmails()" id="submit">
+            Submit
+          </button>
+        </form>
+      </section>
+      <aside class="contact-aside">
+        <section class="aside-header">Header</section>
+        <article class="aside-body">Thanks for your message!</article>
+      </aside>
+    </div>
     <footer id="footer"></footer>
     <style>
       /* Spinner animation */

@@ -92,6 +92,26 @@ aside img {
   margin: 10px 0;
 }
 
+.aside-header {
+  color: #fff;
+  text-align: center;
+  max-width: none;
+  margin: 0 0;
+  padding: 0;
+  background-color: transparent;
+  box-shadow: 0 0 0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.contact-aside {
+  background-color: #0066cc;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Footer Styling */
 footer {
   background-color: #003366;

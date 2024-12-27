@@ -2,25 +2,47 @@ const GEONAMES_USERNAME = "secret8squirrel";
 let ipAdd;
 let locationData;
 
+// import { DefaultCities } from "../../../data/citiesData.js";
+// import { DefaultInit } from "../../../data/initialData.js";
+// import { intros } from "../../../data/intros.js";
 import { updateLoadingText } from "./loading.js";
 
 // Fetch user's public IP address
 const getIp = async () => {
   updateLoadingText("Fetching IP address...");
-  if (ipAdd) return ipAdd;
-  const response = await fetch("https://www.andrewedwards.dev/api/test/feip");
-  const data = await response.json();
-  console.log(data);
-  ipAdd = data.ipAdd;
-  return ipAdd;
+  const retries = 3;
+
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(
+        "https://www.andrewedwards.dev/api/test/feip"
+      );
+      const data = await response.json();
+      console.log(data);
+      ipAdd = data.ipAdd;
+
+      if (!ipAdd || ipAdd === "" || ipAdd === "undefined" || ipAdd === "null") {
+        if (i === retries - 1) {
+          console.info("Failed to get ip...reverting to default...");
+          ipAdd = "50.25.200.1";
+        }
+      }
+
+      return ipAdd;
+    } catch (error) {
+      console.log("Failed to get ip...retrying...");
+    }
+  }
 };
 
 // get the city and state of the user using the IP address
 export const getLocationData = async () => {
   updateLoadingText("Fetching location data...");
   if (locationData) return locationData;
+  let ip;
 
-  const ip = await getIp();
+  ip = await getIp();
+
   const response = await fetch(
     `https://api.findip.net/${ip}/?token=85047163909943138b5593dc41e0512c`
   );
@@ -45,17 +67,21 @@ export const getLocationData = async () => {
 // Fetch the capital city of a given state using GeoNames API
 const getCapitalCity = async (stateCode, countryCode) => {
   updateLoadingText("Fetching capital city for your state...");
-  const response = await fetch(
-    `https://secure.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
-  );
-  let data = await response.json();
-  if (data.geonames.length === 0) {
+  try {
     const response = await fetch(
-      `https://secure.geonames.org/searchJSON?country=${countryCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
+      `https://secure.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
     );
-    data = await response.json();
+    let data = await response.json();
+    if (data.geonames.length === 0) {
+      const response = await fetch(
+        `https://secure.geonames.org/searchJSON?country=${countryCode}&featureCode=PPLA&maxRows=1&username=secret8squirrel`
+      );
+      data = await response.json();
+    }
+    return data.geonames[0]?.toponymName;
+  } catch (error) {
+    return DefaultCities.capital;
   }
-  return data.geonames[0]?.toponymName;
 };
 
 // Fetch the top most populated city of a given state using GeoNames API
@@ -71,6 +97,7 @@ const getTop10Cities = async (stateCode, countryCode) => {
     );
     data = await response.json();
   }
+  if (!data) throw new Error("cant get top 10...revert to defaults");
   return data.geonames;
 };
 
@@ -78,36 +105,48 @@ const getTop10Cities = async (stateCode, countryCode) => {
 export const fetchCitiesData = async (stateCode, countryCode, currentCity) => {
   updateLoadingText("Fetching city data for your state...");
   const capital = await getCapitalCity(stateCode, countryCode);
-  const top10 = await getTop10Cities(stateCode, countryCode);
+  try {
+    const top10 = await getTop10Cities(stateCode, countryCode);
 
-  // Filter out any duplicates: the capital and the user's current city
-  const filteredCities = top10.filter(
-    (city) => city.name !== capital && city.name !== currentCity
-  );
+    // Filter out any duplicates: the capital and the user's current city
+    const filteredCities = top10.filter(
+      (city) => city.name !== capital && city.name !== currentCity
+    );
 
-  // Set city1 based on whether the current city is the capital
-  let city1;
-  if (currentCity === capital) {
-    // If the user is in the capital, use the first city from the filtered list
-    city1 = filteredCities[0];
-  } else {
-    // If the user is not in the capital, set city1 to the capital
-    city1 = { name: currentCity };
+    // Set city1 based on whether the current city is the capital
+    let city1;
+    if (currentCity === capital) {
+      // If the user is in the capital, use the first city from the filtered list
+      city1 = filteredCities[0];
+    } else {
+      // If the user is not in the capital, set city1 to the capital
+      city1 = { name: currentCity };
+    }
+
+    // Select city2 as the next distinct city from filteredCities that isn't city1
+    const city2 = filteredCities.find((city) => city.name !== city1.name) || {
+      name: "Another city not available",
+    }; // Fallback if list is too short
+
+    // Store distinct cities in localStorage for later use
+    localStorage.setItem(
+      "citiesData",
+      JSON.stringify({ capital, city1, city2 })
+    );
+
+    return {
+      capital,
+      city1,
+      city2,
+    };
+  } catch (err) {
+    const { capital, city1, city2 } = DefaultCities;
+    return {
+      capital,
+      city1,
+      city2,
+    };
   }
-
-  // Select city2 as the next distinct city from filteredCities that isn't city1
-  const city2 = filteredCities.find((city) => city.name !== city1.name) || {
-    name: "Another city not available",
-  }; // Fallback if list is too short
-
-  // Store distinct cities in localStorage for later use
-  localStorage.setItem("citiesData", JSON.stringify({ capital, city1, city2 }));
-
-  return {
-    capital,
-    city1,
-    city2,
-  };
 };
 
 const insertFooter = async (state) => {
@@ -160,7 +199,6 @@ export const getIntroFromWiki = async (state, city, isCity) => {
       if (!intro) {
         intro = "No information found.";
       }
-
     }
     // turn our string back into html
     const html = cleanHTML(intro);
@@ -186,13 +224,14 @@ export const getIntroFromWiki = async (state, city, isCity) => {
     return { intro: html, photo };
   } catch (error) {
     console.error("Error fetching data from Wikipedia:", error);
-    return {
-      intro: `
-        <strong>We Couldn't find any info on this city! Please use our form to let us know! Thank you!</strong>
-        <br><br>Laborum et elit ut elit eiusmod ipsum ad tempor exercitation sint. Exercitation mollit pariatur elit elit esse occaecat nisi ut culpa aute ipsum tempor mollit. Incididunt occaecat aliqua adipisicing culpa id et tempor eu velit. Aliquip officia ad ipsum duis et eu fugiat in incididunt esse tempor ipsum. In sint sunt commodo deserunt sit in qui cillum duis in mollit officia. Consequat eu anim in mollit reprehenderit esse sit dolor id reprehenderit. Lorem do aliqua id minim consectetur consectetur ea in non sunt proident nulla pariatur ex.`,
-      photo:
-        "https://images.unsplash.com/photo-1731331323996-7ff41939ddf3?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    };
+    return intros;
+    // return {
+    //   intro: `
+    //     <strong>We Couldn't find any info on this city! Please use our form to let us know! Thank you!</strong>
+    //     <br><br>Laborum et elit ut elit eiusmod ipsum ad tempor exercitation sint. Exercitation mollit pariatur elit elit esse occaecat nisi ut culpa aute ipsum tempor mollit. Incididunt occaecat aliqua adipisicing culpa id et tempor eu velit. Aliquip officia ad ipsum duis et eu fugiat in incididunt esse tempor ipsum. In sint sunt commodo deserunt sit in qui cillum duis in mollit officia. Consequat eu anim in mollit reprehenderit esse sit dolor id reprehenderit. Lorem do aliqua id minim consectetur consectetur ea in non sunt proident nulla pariatur ex.`,
+    //   photo:
+    //     "https://images.unsplash.com/photo-1731331323996-7ff41939ddf3?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    // };
   }
 };
 

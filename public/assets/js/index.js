@@ -41,6 +41,11 @@ const updateContent = async () => {
     stateIntro = JSON.parse(stateIntro);
   }
 
+  // check for stateIntro.Texas
+  if (stateIntro.Texas) {
+    stateIntro = stateIntro.Texas;
+  }
+
   updateIntro(stateIntro.intro);
   updatePhoto(stateIntro.photo);
 
