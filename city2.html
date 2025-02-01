@@ -1,76 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to our page</title>
-    <link rel="stylesheet" href="./assets/css/style.css" /> 
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css"
-    />
-  </head>
-  <body>
-    <div id="loading">
-      <div
-        style="
-          width: 50px;
-          height: 50px;
-          border: 5px solid #ddd;
-          border-top: 5px solid #3498db;
-          border-radius: 50%;
-          margin: auto;
-          animation: spin 1s linear infinite;
-        "
-      ></div>
-      <p style="margin-top: 10px; color: #3498db; font-size: 1.2em">
-        Loading...
-      </p>
-    </div>
 
-    <div id="error" style="display: none">
-      An error occurred. Please try again later.
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to our page</title>
+  <link rel="stylesheet" href="./public/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css" />
+</head>
+
+<body>
+  <div id="loading">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading...</p>
     </div>
-    <header>
-      <h1>City 2: <span class="city-2"></span></h1>
-    </header>
-    <nav>
-      <ul>
-        <li><a class="state-name" href="index.html">Home</a></li>
-        <li><a class="capital-city" href="capital.html"></a></li>
-        <li><a class="city-1" href="city1.html"></a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-      </ul>
-    </nav>
+  </div>
+
+
+  <div id="error" style="display: none">
+    An error occurred. Please try again later.
+  </div>
+  <header>
+    <h1>City 2: <span class="city-2"></span></h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a class="state-name" href="index.html">Home</a></li>
+      <li><a class="capital-city" href="capital.html"></a></li>
+      <li><a class="city-1" href="city1.html"></a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li>
+        <button id="theme-toggle" aria-label="Toggle dark mode">🌓</button>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-container">
     <section id="section-container">
       <h2>About <span class="city-2"></span></h2>
       <p id="intro"></p>
       <img class="pic" alt="City 2" />
     </section>
+
     <aside id="aside-container">
-      <h3>Did you know?</h3>
-      <p>
-        The Population of <span class="city-2"></span> is:
-        <span id="population-count"></span>
-      </p>
+      <section id="dyk-pop">
+        <h3>Did you know?</h3>
+        <p>
+          The Population of <span class="city-1"></span> is:
+          <span id="population-count"></span>!
+        </p>
+      </section>
+
+      <section id="dyk-pop">
+        <h3>Top 10 Cities in <span class="state-name"></span></h3>
+        <table id="population-table">
+          <thead>
+            <tr>
+              <th>City</th>
+              <th>Population</th>
+              <th>Coordinates</th>
+            </tr>
+          </thead>
+          <tbody id="population-table-body"></tbody>
+        </table>
+      </section>
     </aside>
-    <footer id="footer"></footer>
-    <style>
-      /* Spinner animation */
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+  </main>
+
+  <footer id="footer"></footer>
+  <style>
+    /* Spinner animation */
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
       }
-    </style>
-  </body>
-  <script type="module" src="./assets/js/city2.js"></script>
-  <script
-    src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
-    crossorigin="anonymous"
-  ></script>
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</body>
+<script type="module" src="./public/assets/js/city2.js"></script>
+<script type="module" src="./public/assets/js/utils/theme.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+  integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+
 </html>
