@@ -11,8 +11,6 @@ import {
   updateStateEl,
   updateCitiesEl,
   updatePopulation,
-  getPopulationDataForTable,
-  createInterestingFacts,
 } from "./utils/index.js";
 
 /**
@@ -46,42 +44,8 @@ const updateContent = async () => {
   );
   updateIntro(capitalIntro.intro);
   updatePhoto(capitalIntro.photo);
-
   getPopulationData(capital, initialData.country.code).then((population) => {
     updatePopulation(population.toLocaleString());
-  });
-
-  await createInterestingFacts(capital, initialData.country.code, false);
-
-  // Fetch population data for the table
-  getPopulationDataForTable(
-    initialData.state.name,
-    initialData.country.code
-  ).then((population) => {
-    if (typeof population === "string" && population.includes("Error")) {
-      $("#population-count").addClass("text-danger");
-      console.error(
-        population +
-          " Please use our form to update this information! Thank you!"
-      );
-    } else {
-      const geoNames = population.geonames; // array of population data
-      //console.log(geoNames);
-      let tableData = "";
-
-      geoNames.forEach((city) => {
-        if (city.name === initialData.state.name) {
-          return;
-        }
-
-        tableData += `<tr>
-            <td>${city.name}</td>
-            <td>${city.population.toLocaleString()}</td>
-            <td>${city.lat}, ${city.lng}</td>
-          </tr>`;
-      });
-      $("#population-table-body").html(tableData);
-    }
   });
 };
 

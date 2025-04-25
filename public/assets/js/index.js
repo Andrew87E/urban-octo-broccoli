@@ -9,8 +9,6 @@ import {
   updatePhoto,
   updateStateEl,
   updateCitiesEl,
-  getPopulationDataForTable,
-  createInterestingFacts,
 } from "./utils/index.js";
 
 // Update state, city, and interesting facts
@@ -72,41 +70,6 @@ const updateContent = async () => {
       city1PopulationEl.textContent = population.toLocaleString();
     }
   );
-
-  localStorage.setItem("stateIntroPhoto", JSON.stringify(stateIntro.photo));
-
-  await createInterestingFacts(initialData.state.name, initialData.country.code, true);
-
-  // update our table with the population data
-  getPopulationDataForTable(
-    initialData.state.name,
-    initialData.country.code
-  ).then((population) => {
-    if (typeof population === "string" && population.includes("Error")) {
-      $("#population-count").addClass("text-danger");
-      console.error(
-        population +
-          " Please use our form to update this information! Thank you!"
-      );
-    } else {
-      const geoNames = population.geonames; // array of population data
-      //console.log(geoNames);
-      let tableData = "";
-
-      geoNames.forEach((city) => {
-        if (city.name === initialData.state.name) {
-          return;
-        }
-        tableData += `
-        <tr>
-          <td>${city.name}</td>
-          <td>${city.population.toLocaleString()}</td>
-          <td>${city.lat}, ${city.lng}</td>
-        </tr>`;
-      });
-      $("#population-table-body").html(tableData);
-    }
-  });
 };
 
 // Run content update

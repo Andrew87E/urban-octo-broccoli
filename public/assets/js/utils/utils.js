@@ -1,16 +1,14 @@
 const GEONAMES_USERNAME = "secret8squirrel";
+let ip;
 let locationData;
 
 // Fetch user's public IP address
 const getIp = async () => {
-  const ip = sessionStorage.getItem("ip");
   if (ip) return ip;
-
-  const response = await fetch("https://www.edwards.codes/api/test/feip");
+  const response = await fetch("https://edwards.codes/api/test/feip");
   const data = await response.json();
-  const ipAddress = data.ipAdd;
-  sessionStorage.setItem("ip", ipAddress);
-  return ipAddress;
+  ip = data.ip;
+  return data.ip;
 };
 
 // get the city and state of the user using the IP address
@@ -18,11 +16,7 @@ export const getLocationData = async () => {
   if (locationData) return locationData;
 
   const ip = await getIp();
-  // this throws a cors error... so we need to use a proxy server
-  const response = await fetch(
-    `https://www.edwards.codes/api/test/geoip?ip=${ip}`
-  );
-
+  const response = await fetch(`https://edwards.codes/api/test/geoip?ip=${ip}`);
   const data = await response.json();
 
   locationData = data;
@@ -82,58 +76,15 @@ export const fetchCitiesData = async (stateCode, countryCode) => {
   };
 };
 
-export const insertFooter = async (state) => {
+const insertFooter = async (state) => {
+  // text--code for heart in html  &#10084;
   const currentYear = new Date().getFullYear();
-  
-  const $footer = $('#footer');
-  
-  // Clear existing content
-  $footer.empty();
-
-  // Main content container following site's container pattern
-  const $container = $('<div>', {
-    class: 'main-container'
-  }).appendTo($footer);
-
-  // Create footer section following section-container pattern
-  const $footerSection = $('<section>', {
-    class: 'footer-section'
-  }).appendTo($container);
-
-  // Create and append footer elements
-  $('<p>', {
-    class: 'footer-text',
-    html: `&copy; ${currentYear} ${state} Government Office`
-  }).appendTo($footerSection);
-
-  $('<p>', {
-    class: 'footer-subtext',
-    html: 'Powered by ' +
-          '<a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer" class="footer-link">GeoNames</a> ' +
-          'and ' +
-          '<a href="https://www.wikipedia.org/" target="_blank" rel="noopener noreferrer" class="footer-link">Wikipedia</a>'
-  }).appendTo($footerSection);
-
-  $('<p>', {
-    class: 'footer-small-text',
-    html: 'Made with ' +
-          '<a href="https://www.edwards.codes/" target="_blank" rel="noopener noreferrer" class="footer-link">' +
-          '<span class="heart-icon">&#10084;</span></a> ' +
-          'by ' +
-          '<a href="https://www.github.com/andrew87e" target="_blank" rel="noopener noreferrer" class="footer-link author-link">Andrew Edwards</a>'
-  }).appendTo($footerSection);
-
-  // Create and append clear storage button using site's button styling
-  $('<button>', {
-    text: 'Clear Storage',
-    id: 'clear-storage',
-    click: () => {
-      localStorage.clear();
-      sessionStorage.clear();
-      alert('App storage has been cleared.');
-      window.location.reload();
-    }
-  }).appendTo($footerSection);
+  const footer = `
+    <p>&copy; ${currentYear} ${state} Government Office</p>
+    <p id="subtext">Powered by <a href="https://www.geonames.org/" target="_blank">GeoNames</a> and <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a></p>
+    <p id="small-subtext">Made with <a href="https://www.edwards.codes/" target="_blank" style="color: #e81324;">&#10084;</a> by <a href="https://www.github.com/andrew87e" target="_blank" style="color: #42f566;">Andrew Edwards</a></p>
+  `;
+  $("#footer").html(footer);
 };
 
 // Fetch introduction and image from Wikipedia API response
@@ -206,7 +157,7 @@ const cleanHTML = (htmlString) => {
   const doc = parser.parseFromString(htmlString, "text/html");
 
   // Remove unwanted tags (e.g., <link>, <style>)
-  // doc.querySelectorAll("link, script").forEach((el) => el.remove());
+  doc.querySelectorAll("link, style, script").forEach((el) => el.remove());
 
   // Return the cleaned HTML as a string
   return doc.body.innerHTML;
@@ -214,22 +165,12 @@ const cleanHTML = (htmlString) => {
 
 // Fetch population for a specific city using GeoNames API
 export const getPopulationData = async (locationName, countryCode) => {
-  // console.log("pop data0 ", locationName, countryCode);
   const response = await fetch(
-    `https://secure.geonames.org/searchJSON?q=${locationName}&maxRows=10&orderby=population&username=${GEONAMES_USERNAME}`
+    `https://secure.geonames.org/searchJSON?q=${locationName}&country=${countryCode}&maxRows=1&username=${GEONAMES_USERNAME}`
   );
   const data = await response.json();
-  // console.log("pop data1 ", JSON.stringify(data, null, 2));
-
-  // query wont always return the city we want, so we need to find the matching city
-  const matchingLocation = data.geonames.find(
-    (loc) => loc.name === locationName
-  );
-
-  // console.log("pop data2 ", JSON.stringify(matchingLocation, null, 2));
-
   return (
-    matchingLocation.population ||
+    data.geonames[0]?.population ||
     "Population data not available. Please use our form to update this information! Thank you!"
   );
 };
@@ -238,141 +179,4 @@ export const getDataFromStorage = () => {
   const initialData = JSON.parse(localStorage.getItem("initialData"));
   const citiesData = JSON.parse(localStorage.getItem("citiesData"));
   return { initialData, citiesData };
-};
-
-export const getPopulationDataForTable = async (locationName, countryCode) => {
-  const response = await fetch(
-    `https://secure.geonames.org/searchJSON?q=${locationName}&country=${countryCode}&featureCode=PPLA2&maxRows=10&orderby=population&username=${GEONAMES_USERNAME}`
-  );
-  const data = await response.json();
-  // console.log("pop data", JSON.stringify(data, null, 2));
-  return data || "Error";
-};
-
-export const createInterestingFacts = async (locationName, countryCode, isState = false) => {
-  // Insert styles if they don't exist
-  // if (!$('.city-facts-container').length) {
-  //   $('head').append(styles);
-  // }
-
-  // Create container
-  const $container = $('<div>', {
-    class: 'city-facts-container'
-  }).append($('<h3>', {
-    text: 'Quick Facts'
-  }));
-
-  // Create the ordered list
-  const $list = $('<ol>', {
-    class: 'city-facts-list'
-  });
-  $container.append($list);
-
-  try {
-    // Get location data from GeoNames
-    const featureCode = isState ? 'ADM1' : 'PPLA2'; // ADM1 for states, PPLA2 for cities
-    const response = await fetch(
-      `https://secure.geonames.org/searchJSON?q=${locationName}&country=${countryCode}&featureCode=${featureCode}&maxRows=1&username=secret8squirrel`
-    );
-    const data = await response.json();
-    const locationData = data.geonames[0];
-
-    if (!locationData) {
-      throw new Error('Location data not found');
-    }
-
-    // Get timezone info
-    const tzResponse = await fetch(
-      `https://secure.geonames.org/timezoneJSON?lat=${locationData.lat}&lng=${locationData.lng}&username=secret8squirrel`
-    );
-    const tzData = await tzResponse.json();
-
-    // Create facts array based on whether it's a state or city
-    const facts = isState ? [
-      {
-        icon: '📍',
-        title: 'Geographic Center',
-        value: `${locationData.lat}°N, ${locationData.lng}°W`
-      },
-      {
-        icon: '🗺️',
-        title: 'Region',
-        value: locationData.adminCode1 ? `Part of the ${locationData.adminName1} region` : 'Regional data not available'
-      },
-      {
-        icon: '⏰',
-        title: 'Time Zones',
-        value: `Primary: ${tzData.timezoneId} (GMT${tzData.gmtOffset})`
-      },
-      {
-        icon: '📏',
-        title: 'Area Coverage',
-        value: locationData.bbox ? 
-          `Spans from ${locationData.bbox.west}°W to ${locationData.bbox.east}°E longitude` :
-          'Area data not available'
-      },
-      {
-        icon: '🏛️',
-        title: 'Administrative Level',
-        value: `${locationData.fcodeName || 'First-order administrative division'}`
-      }
-    ] : [
-      {
-        icon: '🌎',
-        title: 'Geographic Location',
-        value: `Located at ${locationData.lat}°N, ${locationData.lng}°W`
-      },
-      {
-        icon: '👥',
-        title: 'Population',
-        value: `${locationData.population.toLocaleString()} residents`
-      },
-      {
-        icon: '⏰',
-        title: 'Time Zone',
-        value: `${tzData.timezoneId} (GMT${tzData.gmtOffset})`
-      },
-      {
-        icon: '🏔️',
-        title: 'Elevation',
-        value: `${locationData.elevation || 0} meters above sea level`
-      },
-      {
-        icon: '🌆',
-        title: 'Municipality Type',
-        value: `${locationData.fcodeName || 'City'}`
-      }
-    ];
-
-    // Create and append each fact
-    facts.forEach(fact => {
-      const $li = $('<li>').append(
-        $('<span>', {
-          class: 'fact-icon',
-          text: fact.icon
-        }),
-        $('<div>', {
-          class: 'fact-content'
-        }).append(
-          $('<div>', {
-            class: 'fact-title',
-            text: fact.title
-          }),
-          $('<div>', {
-            class: 'fact-value',
-            text: fact.value
-          })
-        )
-      );
-      $list.append($li);
-    });
-
-    // Remove existing facts if present and insert new ones
-    $('.city-facts-container').remove();
-    $('#aside-container').prepend($container);
-
-  } catch (error) {
-    console.error('Error creating interesting facts:', error);
-    $container.html('<div>Error loading interesting facts. Please try again later.</div>');
-  }
 };

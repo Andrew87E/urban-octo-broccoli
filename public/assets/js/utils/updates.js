@@ -13,6 +13,3 @@ export const updatePopulation = async (population) => {
   }
 };
 
-export const updatePopTable = async (popData) => {
-  $("#population-table-body").html(popData);
-};
