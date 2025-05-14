@@ -4,12 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to our page</title>
-  <link rel="stylesheet" href="./public/style.css" />
+  <meta name="description"
+    content="Information about the second major city, including population, history, and salary data." />
+  <title>City Information</title>
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css" />
+  <link rel="stylesheet" href="./public/assets/css/style.css" />
 </head>
 
 <body>
+  <!-- Loading Spinner -->
   <div id="loading">
     <div class="spinner-container">
       <div class="spinner"></div>
@@ -17,13 +20,17 @@
     </div>
   </div>
 
-
-  <div id="error" style="display: none">
+  <!-- Error Message -->
+  <div id="error" style="display: none" class="error-message">
     An error occurred. Please try again later.
   </div>
+
+  <!-- Header -->
   <header>
     <h1>City 2: <span class="city-2"></span></h1>
   </header>
+
+  <!-- Navigation -->
   <nav>
     <ul>
       <li><a class="state-name" href="index.html">Home</a></li>
@@ -36,6 +43,7 @@
     </ul>
   </nav>
 
+  <!-- Main Content -->
   <main class="main-container">
     <section id="section-container">
       <h2>About <span class="city-2"></span></h2>
@@ -44,14 +52,56 @@
     </section>
 
     <aside id="aside-container">
+      <!-- Population Information -->
       <section id="dyk-pop">
         <h3>Did you know?</h3>
         <p>
-          The Population of <span class="city-1"></span> is:
+          The Population of <span class="city-2"></span> is:
           <span id="population-count"></span>!
         </p>
       </section>
 
+      <!-- Salary Information -->
+      <section class="city-facts-container">
+        <h3>Salary Comparison</h3>
+        <div id="salary-comparison-loading" class="text-center">
+          <div class="spinner" style="margin: 20px auto;"></div>
+          <p>Loading salary data...</p>
+        </div>
+
+        <div id="salary-comparison-content" class="hidden">
+          <ul class="city-facts-list">
+            <li>
+              <div class="fact-icon">💰</div>
+              <div class="fact-content">
+                <div class="fact-title">Average Salary in <span class="city-name"></span></div>
+                <div class="fact-value">$<span id="city-average-salary">0</span> per year</div>
+              </div>
+            </li>
+            <li>
+              <div class="fact-icon">📊</div>
+              <div class="fact-content">
+                <div class="fact-title">State Average Salary</div>
+                <div class="fact-value">$<span id="state-average-salary">0</span> per year</div>
+              </div>
+            </li>
+            <li>
+              <div class="fact-icon">📈</div>
+              <div class="fact-content">
+                <div class="fact-title">Comparison</div>
+                <div class="fact-value"><span id="salary-percentage">0</span>% <span
+                    id="comparison-text">different</span> than state average</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div id="salary-comparison-error" class="error-message hidden">
+          Unable to load salary data. Please try again later.
+        </div>
+      </section>
+
+      <!-- Top Cities Table -->
       <section id="dyk-pop">
         <h3>Top 10 Cities in <span class="state-name"></span></h3>
         <table id="population-table">
@@ -68,23 +118,15 @@
     </aside>
   </main>
 
+  <!-- Footer -->
   <footer id="footer"></footer>
-  <style>
-    /* Spinner animation */
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
 
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+  <script type="module" src="./public/assets/js/pages/city2.js"></script>
+  <script type="module" src="./public/assets/js/utils/button.js"></script>
+  <script type="module" src="./public/assets/js/utils/badges.js"></script>
 </body>
-<script type="module" src="./public/assets/js/city2.js"></script>
-<script type="module" src="./public/assets/js/utils/theme.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-  integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 
 </html>

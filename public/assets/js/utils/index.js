@@ -1,12 +1,32 @@
-// single barrel pattern for easier imports
+/**
+ * Barrel file that exports all utility functions
+ */
 
-export { displayLoading, hideLoading } from "./loading.js";
+// DOM manipulation utilities
 export {
-  getLocationData,
-  fetchCitiesData,
-  getIntroFromWiki,
-  getPopulationData,
+  displayLoading,
+  hideLoading,
+  updateIntro,
+  updatePhoto,
+  updatePopulation,
+  updateStateElement,
+  updateCityElements,
+  updateTableWithCities,
+  updateSalaryComparison,
+  showSalaryError,
+  insertFooter,
+} from "./dom.js";
+
+// API utilities
+// Export all API functions directly to avoid import path issues
+export * from "./api.js";
+
+// Storage utilities
+export {
   getDataFromStorage,
-} from "./utils.js";
-export { updateIntro, updatePhoto, updatePopulation } from "./updates.js";
-export { updateStateEl, updateCitiesEl } from "./nav.js";
+  saveDataToStorage,
+  clearStorage,
+} from "./storage.js";
+
+// Theme utilities
+export { initializeTheme, toggleTheme } from "./theme.js";

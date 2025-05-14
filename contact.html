@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact us with questions or feedback about our state and city information." />
   <title>Contact Us</title>
-  <link rel="stylesheet" href="./public/style.css" />
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@3.4.14/src/css/preflight.css" />
-
-  <script src="script.js"></script>
+  <link rel="stylesheet" href="./public/assets/css/style.css" />
 </head>
 
 <body>
+  <!-- Loading Spinner -->
   <div id="loading">
     <div class="spinner-container">
       <div class="spinner"></div>
@@ -19,12 +19,15 @@
     </div>
   </div>
 
+  <!-- Header -->
   <header>
     <h1>Contact Us</h1>
   </header>
+
+  <!-- Navigation -->
   <nav>
     <ul>
-      <li><a class="state-name" href="index.html"></a></li>
+      <li><a class="state-name" href="index.html">Home</a></li>
       <li><a class="capital-city" href="capital.html"></a></li>
       <li><a class="city-1" href="city1.html"></a></li>
       <li><a class="city-2" href="city2.html"></a></li>
@@ -34,51 +37,50 @@
     </ul>
   </nav>
 
+  <!-- Main Content -->
   <main class="main-container">
     <section id="section-container">
       <h2>Get in Touch with <span class="state-name"></span></h2>
 
-      <img class="pic" alt="Contact Us" />
-
       <form id="contactForm">
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" /><br />
+        <div class="form-group">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName" />
+        </div>
 
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" /><br />
+        <div class="form-group">
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName" />
+        </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" /><br />
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" />
+        </div>
 
-        <label for="confirmEmail">Confirm Email:</label>
-        <input type="email" id="confirmEmail" name="confirmEmail" /><br />
+        <div class="form-group">
+          <label for="confirmEmail">Confirm Email:</label>
+          <input type="email" id="confirmEmail" name="confirmEmail" />
+        </div>
 
-        <label for="question">Your Question:</label><br />
-        <textarea id="question" name="question"></textarea><br />
+        <div class="form-group">
+          <label for="question">Your Question:</label>
+          <textarea id="question" name="question" rows="5"></textarea>
+        </div>
 
-        <button type="submit" onclick="validateEmails()">Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer id="footer"></footer>
-  <style>
-    /* Spinner animation */
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
 
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+  <script type="module" src="./public/assets/js/pages/contact.js"></script>
+  <script type="module" src="./public/assets/js/utils/button.js"></script>
 </body>
-<script src="script.js"></script>
-<script type="module" src="./public/assets/js/contact.js"></script>
-<script type="module" src="./public/assets/js/utils/theme.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-  integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 
 </html>
